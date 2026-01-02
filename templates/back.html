@@ -1,0 +1,13 @@
+<div style="text-align: center;">
+  {% if card.card_faces %}
+    {% for face in card.card_faces %}
+      {% if face.image_uris and face.image_uris.normal %}
+        <img src="{{ face.image_uris.normal }}">
+      {% endif %}
+    {% endfor %}
+  {% else %}
+    {% if card.image_uris and card.image_uris.normal %}
+      <img src="{{ card.image_uris.normal }}">
+    {% endif %}
+  {% endif %}
+</div>

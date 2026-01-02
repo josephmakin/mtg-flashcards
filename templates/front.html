@@ -1,0 +1,13 @@
+{% if card.card_faces %}
+  {% set front = card.card_faces[0] %}
+{% else %}
+  {% set front = card %}
+{% endif %}
+
+<div style="text-align: center;">
+  <h1>{{ front.name }}</h1>
+  <br>
+  {% if front.image_uris and front.image_uris.art_crop %}
+    <img src="{{ front.image_uris.art_crop }}">
+  {% endif %}
+</div>

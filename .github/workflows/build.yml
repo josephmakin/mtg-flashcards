@@ -1,0 +1,40 @@
+name: Regenerate Anki Decks
+
+on:
+  push:
+  branches:
+    - main
+  schedule:
+    - cron: '0 */4 * * *'
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+  steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Generate decks
+      run: |
+        python main.py
+
+    - name: Commit and push decks
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "Github Action"
+        git add decks/*.apkg
+        git commit -m "Automated decks update"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
