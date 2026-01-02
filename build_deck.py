@@ -114,7 +114,6 @@ try:
     package.write_to_file(f"{OUTPUT_DIRECTORY}/{filename}")
 
     print(f"Anki deck created: {filename} ({len(cards)} cards)")
-    print(f"Deck saved to: {os.path.abspath(os.path.join(OUTPUT_DIRECTORY,
-filename))}")
+    print(f"Deck saved to: {os.path.abspath(os.path.join(OUTPUT_DIRECTORY, filename))}")
 except Exception as e:
     print(f"Failed to write deck: {e}")
