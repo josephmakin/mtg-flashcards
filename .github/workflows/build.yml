@@ -42,7 +42,7 @@ jobs:
             echo "changes=false" >> $GITHUB_OUTPUT
           else
             echo "changed=true" >> $GITHUB_OUTPUT
-          if
+          fi
 
       - name: Upload decks to GitHub Release
         if: steps.changes.outputs.changed == 'true'
