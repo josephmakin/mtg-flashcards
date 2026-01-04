@@ -1,1 +1,59 @@
+name: Regenerate Anki Decks
 
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: '0 */4 * * *'
+
+concurrency:
+  group: regenerate-anki-decks
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Generate decks
+        run: |
+          python main.py
+
+      - name: Check for deck changes
+        id: changes
+        run: |
+          if git diff --quiet -- decks/*.apkg; then
+            echo "changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          if
+
+      - name: Upload decks to GitHub Release
+        if: steps.changes.outputs.changed == 'true'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: latest
+          name: Latest Anki Decks
+          body: |
+             Automatically regenerated Anki decks.
+
+             This release is updated every 4 hours or when changes are pushed to the 'master' branch.
+          files: decks/*.apkg
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
