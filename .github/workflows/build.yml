@@ -36,6 +36,12 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "Github Action"
+
+          if git diff --quiet -- decks/*.apkg; then
+            echo "No deck changes detected. Skipping commit."
+            exit 0
+          fi
+
           git add decks/*.apkg
           git commit -m "Automated decks update [skip ci]" || echo "No changes to commit"
           git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
